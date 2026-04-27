@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> {})
+            .cors(cors -> {}) // ✅ enable CORS
             .csrf(csrf -> csrf.disable())
 
             .sessionManagement(session ->
@@ -38,7 +38,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
 
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            // 🔥 TEMP: comment this if testing without JWT
+            // .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -48,8 +49,10 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
+        // 🔥 VERY IMPORTANT: allow your Vercel frontend
         config.setAllowedOrigins(List.of(
-            "http://localhost:5173"
+            "http://localhost:5173",
+            "https://certivault-frontend-15r2-k98unfd8w-suryadummy27-6256s-projects.vercel.app"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
